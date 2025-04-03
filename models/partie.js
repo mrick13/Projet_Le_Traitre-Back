@@ -8,5 +8,11 @@ module.exports = (sequelize, DataTypes) => {
         historique: DataTypes.JSON,
         etat: DataTypes.STRING
     });
+
+    Partie.associate = (models) => {
+        Partie.belongsToMany(models.Connexion, { through: 'JoueurPartie' });
+        Partie.hasMany(models.CarteDeJeu, { foreignKey: 'partieId' });
+    };
+
     return Partie;
 };

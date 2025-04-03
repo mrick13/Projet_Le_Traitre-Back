@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
 
     Connexion.associate = (models) => {
         Connexion.belongsToMany(models.Partie, { through: 'JoueurPartie' });
-        Connexion.hasMany(models.CarteDeJeu);
+        Connexion.hasMany(models.CarteDeJeu, { foreignKey: 'joueurId' });
     };
 
     return Connexion;
