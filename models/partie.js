@@ -10,9 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     Partie.associate = (models) => {
-        Partie.belongsToMany(models.Connexion, { through: 'JoueurPartie' });
         Partie.hasMany(models.CarteDeJeu, { foreignKey: 'partieId' });
     };
-
     return Partie;
 };
