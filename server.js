@@ -1,19 +1,24 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const { sequelize } = require('./models');
-const connexionRoutes = require('./routes/connexion');
-const carteDeJeuRoutes = require('./routes/carteDeJeu');
-const partieRoutes = require('./routes/partie');
+import express from 'express';
+import cors from 'cors';
+import { sequelize } from './models/index.js';
+import connexionRoutes from './routes/connexion.js';
+import carteDeJeuRoutes from './routes/carteDeJeu.js';
+import partieRoutes from './routes/partie.js';
 
 const app = express();
-app.use(bodyParser.json());
 
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+// Routes
 app.use('/connexion', connexionRoutes);
 app.use('/carteDeJeu', carteDeJeuRoutes);
 app.use('/partie', partieRoutes);
 
 const PORT = process.env.PORT || 3000;
 
+// Synchroniser la base de données et démarrer le serveur
 sequelize.sync({ force: true }).then(() => {
     app.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
