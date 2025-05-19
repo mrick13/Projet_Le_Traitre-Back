@@ -11,12 +11,12 @@ module.exports = (sequelize, DataTypes) => {
         joueurId: {
             type: DataTypes.INTEGER,
             references: {
-                model: 'Connexions',
+                model: 'Users',
                 key: 'id'
             }
         },
         partieId: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING(8),
             references: {
                 model: 'Parties',
                 key: 'id'
@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     CarteDeJeu.associate = (models) => {
-        CarteDeJeu.belongsTo(models.Connexion, { foreignKey: 'joueurId' });
+        CarteDeJeu.belongsTo(models.User, { foreignKey: 'joueurId' });
         CarteDeJeu.belongsTo(models.Partie, { foreignKey: 'partieId' });
     };
 

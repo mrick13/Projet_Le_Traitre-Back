@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    const Connexion = sequelize.define('Connexion', {
+    const User = sequelize.define('User', { // Renommez ici le modèle en 'User'
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
@@ -10,10 +10,10 @@ module.exports = (sequelize, DataTypes) => {
         pseudo: DataTypes.STRING
     });
 
-    Connexion.associate = (models) => {
-        Connexion.belongsToMany(models.Partie, { through: 'JoueurPartie' });
-        Connexion.hasMany(models.CarteDeJeu, { foreignKey: 'joueurId' });
+    User.associate = (models) => {
+        User.belongsToMany(models.Partie, { through: 'JoueurPartie' });
+        User.hasMany(models.CarteDeJeu, { foreignKey: 'joueurId' });
     };
 
-    return Connexion;
+    return User;
 };

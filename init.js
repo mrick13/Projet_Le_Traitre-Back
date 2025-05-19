@@ -6,7 +6,6 @@ const initialCards = [
     { nom: 'Voyante', role: 'Villageois', pouvoir: 'Peut voir la carte d’un joueur' },
     { nom: 'Loup-Garou', role: 'Loup-Garou', pouvoir: 'Peut tuer un joueur chaque nuit' },
     { nom: 'Sorcière', role: 'Villageois', pouvoir: 'Peut sauver ou tuer un joueur une fois par partie' },
-    // Ajoutez d'autres cartes ici
 ];
 
 sequelize.sync({ force: true }).then(async () => {

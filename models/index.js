@@ -38,10 +38,10 @@ Object.keys(db).forEach(modelName => {
 });
 
 // Model associations
-db.Connexion.belongsToMany(db.Partie, { through: 'JoueurPartie' });
-db.Partie.belongsToMany(db.Connexion, { through: 'JoueurPartie' });
-db.Connexion.hasMany(db.CarteDeJeu, { foreignKey: 'joueurId' });
-db.CarteDeJeu.belongsTo(db.Connexion, { foreignKey: 'joueurId' });
+db.User.belongsToMany(db.Partie, { through: 'JoueurPartie' });
+db.Partie.belongsToMany(db.User, { through: 'JoueurPartie' });
+db.User.hasMany(db.CarteDeJeu, { foreignKey: 'joueurId' });
+db.CarteDeJeu.belongsTo(db.User, { foreignKey: 'joueurId' });
 db.Partie.hasMany(db.CarteDeJeu, { foreignKey: 'partieId' });
 db.CarteDeJeu.belongsTo(db.Partie, { foreignKey: 'partieId' });
 

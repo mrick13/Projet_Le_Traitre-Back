@@ -1,24 +1,27 @@
-import express from 'express';
-import cors from 'cors';
-import { sequelize } from './models/index.js';
-import connexionRoutes from './routes/connexion.js';
-import carteDeJeuRoutes from './routes/carteDeJeu.js';
-import partieRoutes from './routes/partie.js';
+const express = require('express');
+const bodyParser = require('body-parser');
+const { sequelize } = require('./models');
+const carteDeJeuRoutes = require('./routes/carteDeJeu');
+const partieRoutes = require('./routes/partie');
+const userRoutes = require('./routes/user');
+const cors = require('cors');
 
 const app = express();
-
-// Middleware
+app.use(bodyParser.json());
 app.use(cors());
-app.use(express.json());
 
-// Routes
-app.use('/connexion', connexionRoutes);
+app.use('/user', userRoutes);
 app.use('/carteDeJeu', carteDeJeuRoutes);
 app.use('/partie', partieRoutes);
 
 const PORT = process.env.PORT || 3000;
 
-// Synchroniser la base de données et démarrer le serveur
+// const corsOptions = {
+//     origin: 'http://localhost:4200', // Autoriser uniquement cette origine
+//     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Méthodes HTTP autorisées
+//     allowedHeaders: ['Content-Type', 'Authorization'], // En-têtes autorisés
+// };
+
 sequelize.sync({ force: true }).then(() => {
     app.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);

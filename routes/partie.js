@@ -1,47 +1,52 @@
 const express = require('express');
 const router = express.Router();
-const { Partie, Connexion, CarteDeJeu } = require('../models');
+const { Partie ,User } = require('../models');
 
-// Route pour démarrer une nouvelle partie
-router.post('/start', async (req, res) => {
-    const { joueurs } = req.body; // Array of player IDs
+// Route pour créer un nouveau lobby
+router.post('/lobby', async (req, res) => {
+    const { id } = req.body;
+
     try {
-        const newGame = await Partie.create({ historique: [], etat: 'en cours' });
-
-        // Associer les joueurs à la partie
-        const players = await Connexion.findAll({ where: { id: joueurs } });
-        await newGame.addConnexions(players);
-
-        res.json(newGame);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Route pour obtenir l'état d'une partie
-router.get('/:id', async (req, res) => {
-    const { id } = req.params;
-    try {
-        const game = await Partie.findOne({
-            where: { id },
-            include: [Connexion, CarteDeJeu]
+        const newLobby = await Partie.create({
+            id,                  // ex: 'AB1CD2EF' → généré par le front
         });
-        res.json(game);
+        res.status(201).json({ gameId: newLobby.id });
     } catch (err) {
+        console.error('Erreur création lobby :', err);
         res.status(500).json({ error: err.message });
     }
 });
 
-// Route pour mettre à jour l'état de la partie (ex: lorsqu'un joueur meurt)
-router.post('/:id/update', async (req, res) => {
+router.post('/:id/join', async (req, res) => {
     const { id } = req.params;
-    const { historique, etat } = req.body;
+    const { userId } = req.body;
+
     try {
-        const game = await Partie.findOne({ where: { id } });
-        game.historique = historique;
-        game.etat = etat;
-        await game.save();
-        res.json(game);
+        const partie = await Partie.findByPk(id);
+        if (!partie) return res.status(404).json({ error: 'Partie non trouvée' });
+
+        const user = await User.findByPk(userId);
+        if (!user) return res.status(404).json({ error: 'Utilisateur non trouvé' });
+
+        await partie.addUser(user);
+
+        res.status(200).json({ message: `Joueur ${user.pseudo} a rejoint la partie ${id}` });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+
+router.get('/:id/players', async (req, res) => {
+    try {
+        const partie = await Partie.findByPk(req.params.id, {
+            include: [{ model: User, attributes: ['id', 'pseudo'] }]
+        });
+
+        if (!partie) return res.status(404).json({ error: 'Partie non trouvée' });
+
+        res.json({ joueurs: partie.Users });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
