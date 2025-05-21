@@ -10,7 +10,6 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true
         },
         historique: DataTypes.JSON,
-        etat: DataTypes.STRING ,
     });
 
     Partie.associate = (models) => {

@@ -8,7 +8,7 @@ router.post('/lobby', async (req, res) => {
 
     try {
         const newLobby = await Partie.create({
-            id,                  // ex: 'AB1CD2EF' → généré par le front
+            id,
         });
         res.status(201).json({ gameId: newLobby.id });
     } catch (err) {
@@ -51,5 +51,44 @@ router.get('/:id/players', async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
+
+router.post('/demo', async (req, res) => {
+    try {
+        const demoId = 'DEMO1234';
+
+        // Vérifie si la partie existe déjà
+        const existing = await Partie.findByPk(demoId);
+        if (existing) return res.status(400).json({ error: 'Partie démo déjà créée.' });
+
+        const partie = await Partie.create({
+            id: demoId,
+            roles: JSON.stringify([
+                { joueurId: 1, role: 'Villageois' },
+                { joueurId: 2, role: 'Voyante' },
+                { joueurId: 3, role: 'Loup-Garou' },
+                { joueurId: 4, role: 'Villageois' },
+                { joueurId: 5, role: 'Sorcière' },
+                { joueurId: 6, role: 'Villageois' },
+                { joueurId: 7, role: 'Loup-Garou' },
+                { joueurId: 8, role: 'Villageois' }
+            ])
+        });
+
+        // Crée les utilisateurs fictifs
+        const joueurs = [];
+        for (let i = 1; i <= 8; i++) {
+            const pseudo = `Joueur ${i}`;
+            const user = await User.create({ email: `demo${i}@demo.com`, password: 'demo', pseudo });
+            joueurs.push(user);
+            await partie.addUser(user); // lie le joueur à la partie
+        }
+
+            res.status(201).json({ message: 'Partie démo créée.', gameId: demoId, partie });
+        } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
 
 module.exports = router;

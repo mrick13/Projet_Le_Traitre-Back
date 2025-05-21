@@ -6,7 +6,7 @@ const { User } = require('../models'); // Remplacez Connexion par User
 router.post('/register', async (req, res) => {
     const { password, email, pseudo } = req.body;
     try {
-        const newUser = await User.create({ password, email, pseudo });
+        const newUser = await User.create({ password, email, pseudo});
         res.json(newUser);
     } catch (err) {
         res.status(500).json({ error: err.message });

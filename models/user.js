@@ -7,7 +7,11 @@ module.exports = (sequelize, DataTypes) => {
         },
         password: DataTypes.STRING,
         email: DataTypes.STRING,
-        pseudo: DataTypes.STRING
+        pseudo: DataTypes.STRING,
+        etat: {
+            type :DataTypes.BOOLEAN,
+            defaultValue: true //true sera pour vivant et false pour mort
+        }
     });
 
     User.associate = (models) => {
