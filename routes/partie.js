@@ -63,14 +63,14 @@ router.post('/demo', async (req, res) => {
         const partie = await Partie.create({
             id: demoId,
             roles: JSON.stringify([
-                { joueurId: 1, role: 'Villageois' },
-                { joueurId: 2, role: 'Voyante' },
-                { joueurId: 3, role: 'Loup-Garou' },
-                { joueurId: 4, role: 'Villageois' },
-                { joueurId: 5, role: 'Sorcière' },
-                { joueurId: 6, role: 'Villageois' },
-                { joueurId: 7, role: 'Loup-Garou' },
-                { joueurId: 8, role: 'Villageois' }
+                { joueurId: 2, role: 'Villageois' },
+                { joueurId: 3, role: 'Voyante' },
+                { joueurId: 4, role: 'Loup-Garou' },
+                { joueurId: 5, role: 'Villageois' },
+                { joueurId: 6, role: 'Sorcière' },
+                { joueurId: 7, role: 'Villageois' },
+                { joueurId: 8, role: 'Loup-Garou' },
+                { joueurId: 9, role: 'Villageois' }
             ])
         });
 
@@ -86,6 +86,27 @@ router.post('/demo', async (req, res) => {
             res.status(201).json({ message: 'Partie démo créée.', gameId: demoId, partie });
         } catch (err) {
         console.error(err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+router.patch('/:id/joueur/:joueurId', async (req, res) => {
+    const { joueurId } = req.params;
+    const { etat } = req.body;
+    console.log('PATCH joueur:', joueurId, 'etat:', etat);
+
+    try {
+        const user = await User.findByPk(joueurId);
+        if (!user) return res.status(404).json({ error: 'Utilisateur non trouvé' });
+
+        if (typeof etat === 'boolean') {
+            user.etat = etat;
+            await user.save();
+            res.status(200).json({ message: "Etat du joueur mis à jour", joueur: user });
+        } else {
+            res.status(400).json({ error: "Champ 'etat' requis et doit être un booléen." });
+        }
+    } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
