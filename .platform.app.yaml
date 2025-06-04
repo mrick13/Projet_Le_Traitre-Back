@@ -1,21 +1,17 @@
 name: app
 type: "nodejs:18"
-build:
-  commands:
-    - npm install
+
+build_hook: |
+  npm install
+
 web:
   commands:
     start: npm start
-  locations:
-    "/":
-      root: "public"
-      passthru: true
-mounts: []
+
 relationships:
   database: "db:postgresql"
+
 variables:
   env:
     NODE_ENV: "production"
     PORT: "8080"
-    # Platform.sh fournit la variable d'environnement 'PLATFORM_RELATIONSHIPS' pour se connecter à la BDD
-    # Tu devras parser cette variable dans ton code pour te connecter à PostgreSQL
