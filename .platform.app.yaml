@@ -1,8 +1,9 @@
 name: app
 type: "nodejs:18"
 
-build_hook: |
-  npm install
+build:
+  commands:
+    - npm install
 
 web:
   commands:
