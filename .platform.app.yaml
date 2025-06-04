@@ -2,8 +2,7 @@ name: app
 type: "nodejs:18"
 
 build:
-  commands:
-    - npm install
+  - npm install
 
 web:
   commands:
