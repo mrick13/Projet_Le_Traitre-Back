@@ -1,10 +1,6 @@
 name: app
 type: "nodejs:18"
 
-build:
-  commands:
-    npm_install: npm install
-
 web:
   commands:
     start: npm start
