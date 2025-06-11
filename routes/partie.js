@@ -80,7 +80,7 @@ router.post('/demo', async (req, res) => {
             const pseudo = `Joueur ${i}`;
             const user = await User.create({ email: `demo${i}@demo.com`, password: 'demo', pseudo });
             joueurs.push(user);
-            await partie.addUser(user); // lie le joueur à la partie
+            await partie.addUser(user);
         }
 
             res.status(201).json({ message: 'Partie démo créée.', gameId: demoId, partie });

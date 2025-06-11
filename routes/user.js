@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { User } = require('../models'); // Remplacez Connexion par User
+const { User } = require('../models');
 
 // Route pour inscription
 router.post('/register', async (req, res) => {
@@ -49,6 +49,33 @@ router.get('/profile', async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Erreur interne du serveur' });
+    }
+});
+
+router.get('/users', async (req, res) => {
+    try {
+        const users = await User.findAll();
+        if (users.length === 0) {
+            return res.status(404).json({ message: 'Aucun utilisateur trouvé' });
+        }
+        res.status(200).json(users);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Erreur serveur' });
+    }
+});
+
+router.post('/users', async (req, res) => {
+    try {
+        const user = await User.create({
+            email: 'example@mail.com',
+            password: 'password123',
+            pseudo: 'exampleuser',
+        });
+        res.status(201).json(user);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Erreur serveur' });
     }
 });
 
