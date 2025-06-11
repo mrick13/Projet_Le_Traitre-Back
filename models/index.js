@@ -6,33 +6,13 @@ const Sequelize = require('sequelize');
 const process = require('process');
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
-const configFile = require(__dirname + '/../config/config.js');
+const config = require(__dirname + '/../config/config.js')[env];
 const db = {};
 
-let config = configFile[env];
 let sequelize;
 
-// Ajout de la gestion Platform.sh
-if (process.env.PLATFORM_RELATIONSHIPS) {
-    const relationships = JSON.parse(
-        Buffer.from(process.env.PLATFORM_RELATIONSHIPS, 'base64').toString('utf-8')
-    );
-    const dbRel = relationships.db[0];
-    config = {
-        username: dbRel.username,
-        password: dbRel.password,
-        database: dbRel.path,
-        host: dbRel.host,
-        port: dbRel.port,
-        dialect: 'postgres',
-        ssl: dbRel.scheme === 'postgresql',
-        dialectOptions: {
-            ssl: dbRel.scheme === 'postgresql' ? { rejectUnauthorized: false } : false,
-        },
-        logging: false,
-    };
-    sequelize = new Sequelize(config.database, config.username, config.password, config);
-} else if (config.use_env_variable) {
+
+if (config.use_env_variable) {
     sequelize = new Sequelize(process.env[config.use_env_variable], config);
 } else {
     sequelize = new Sequelize(config.database, config.username, config.password, config);
@@ -42,11 +22,11 @@ fs
     .readdirSync(__dirname)
     .filter(file => {
         return (
-            file.indexOf('.') !== 0 &&
-            file !== basename &&
-            file.slice(-3) === '.js' &&
-            file.indexOf('.test.js') === -1
-        );
+        file.indexOf('.') !== 0 &&
+        file !== basename &&
+        file.slice(-3) === '.js' &&
+        file.indexOf('.test.js') === -1
+    );
     })
     .forEach(file => {
         const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
