@@ -24,6 +24,7 @@ web:
 #
 relationships:
   postgresql: 'postgresql:postgresql'
+
 #
 #variables:
 #  env:
