@@ -23,7 +23,7 @@ web:
 #    start: npm start
 #
 relationships:
-  database: "db:postgresql"
+  postgresql: 'postgresql:postgresql'
 #
 #variables:
 #  env:
