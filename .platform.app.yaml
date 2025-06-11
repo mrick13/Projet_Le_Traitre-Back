@@ -22,8 +22,8 @@ web:
 #  commands:
 #    start: npm start
 #
-#relationships:
-#  database: "db:postgresql"
+relationships:
+  database: "db:postgresql"
 #
 #variables:
 #  env:
