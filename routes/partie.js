@@ -2,15 +2,20 @@ const express = require('express');
 const router = express.Router();
 const { Partie ,User } = require('../models');
 
-// Route pour créer un nouveau lobby
+// Route pour créer un nouveau lobby (ou rejoindre le lobby existant, ex. rafraîchissement du MJ)
 router.post('/lobby', async (req, res) => {
-    const { id } = req.body;
+    const { id, userId } = req.body;
 
     try {
-        const newLobby = await Partie.create({
-            id,
-        });
-        res.status(201).json({ gameId: newLobby.id });
+        const [lobby] = await Partie.findOrCreate({ where: { id } });
+
+        // Lier le MJ à la partie pour qu'elle apparaisse dans son historique
+        if (userId) {
+            const host = await User.findByPk(userId);
+            if (host) await lobby.addUser(host);
+        }
+
+        res.status(201).json({ gameId: lobby.id });
     } catch (err) {
         console.error('Erreur création lobby :', err);
         res.status(500).json({ error: err.message });
